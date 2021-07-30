@@ -1,8 +1,8 @@
 <template>
   <div class="home flex flex-col">
-    <h1 class="text-4xl font-semibold">Foto</h1>
+    <h1 class="text-4xl font-semibold">Album</h1>
     <div class="mt-5">
-      <Photo :lastPage="lastPageCounter"></Photo>
+      <Album :lastPage="lastPageCounter"></Album>
     </div>
     <div class="m-0 mx-auto p-2 bg-white text-black my-10 rounded-full">
       <a href="javascript:void(0)" @click="showMore">Tampilkan Lebih Banyak</a>
@@ -11,17 +11,17 @@
 </template>
 
 <script>
-import Photo from '@/components/Photo.vue';
+import Album from '@/components/Album.vue';
 
 export default {
-  name: 'Home',
+  name: 'AlbumView',
   data() {
     return {
       lastPageCounter: 1
     }
   },
   components: {
-    Photo,
+    Album,
   },
   methods: {
     showMore() {
