@@ -1,27 +1,33 @@
 <template>
-  <div class="flex flex-col" >
-    <div class="flex flex-col md:flex-row" v-show="search === ''"
-         v-for="(section, indexSection) in photo.photoData._value" :key="indexSection">
-      <div
-        class="w-full h-full md:w-72 bg-white rounded-lg text-black mr-5 mt-5 flex flex-col"  v-for="(photo, indexPhoto) in section" :key="indexPhoto"
-      >
-        <div><img class="m-0 mx-auto m-2" :src="photo.thumbnail_url" alt=""></div>
-        <div class="m-1"><a href="javascript:void(0)">Title: {{ photo.title }}</a></div>
-        <div class="m-1"><p>Album: {{photo.album.title}}</p></div>
-        <div v-if="movePhotoMode"><span>Move photo </span><input type="checkbox" @click="handleSelectPhoto(photo.id, $event)"></div>
-        <div v-if="user !== null"><a href="javascript:void(0)" class="bg-red-400 text-white rounded-sm w-18" @click="handleDeletePhoto(photo.id)">Delete</a></div>
+  <div>
+    <div class="flex flex-col" >
+      <div class="flex flex-col md:flex-row" v-show="search === ''"
+           v-for="(section, indexSection) in photo.photoData._value" :key="indexSection">
+        <div
+          class="w-full h-full md:w-72 bg-white rounded-lg text-black mr-5 mt-5 flex flex-col"  v-for="(photo, indexPhoto) in section" :key="indexPhoto"
+        >
+          <div><img class="m-0 mx-auto m-2" :src="photo.thumbnail_url" alt=""></div>
+          <div class="m-1"><a href="javascript:void(0)">Title: {{ photo.title }}</a></div>
+          <div class="m-1"><p>Album: {{photo.album.title}}</p></div>
+          <div v-if="movePhotoMode"><span>Move photo </span><input type="checkbox" @click="handleSelectPhoto(photo.id, $event)"></div>
+          <div v-if="user !== null"><a href="javascript:void(0)" class="bg-red-400 text-white rounded-sm w-18" @click="handleDeletePhoto(photo.id)">Delete</a></div>
+        </div>
+      </div>
+      <div class="flex flex-col md:flex-row" v-show="photo.photoDataSearch._value.length > 0"
+           v-for="(section, indexSection) in photo.photoDataSearch._value" :key="indexSection">
+        <div
+          class="w-full h-72 md:w-72 bg-white rounded-lg text-black mr-5 mt-5 flex flex-col"  v-for="(photo, indexPhoto) in section" :key="indexPhoto"
+        >
+          <div><img class="m-0 mx-auto m-2" :src="photo.thumbnail_url" alt=""></div>
+          <div class="m-1"><a href="javascript:void(0)">Title: {{ photo.title }}</a></div>
+          <div class="m-1"><p>Album: {{photo.album.title}}</p></div>
+          <div v-if="user !== null"><a href="javascript:void(0)" class="bg-red-400 text-white rounded-sm w-18" @click="handleDeletePhoto(photo.id)">Delete</a></div>
+        </div>
       </div>
     </div>
-    <div class="flex flex-col md:flex-row" v-show="photo.photoDataSearch._value.length > 0"
-         v-for="(section, indexSection) in photo.photoDataSearch._value" :key="indexSection">
-      <div
-        class="w-full h-72 md:w-72 bg-white rounded-lg text-black mr-5 mt-5 flex flex-col"  v-for="(photo, indexPhoto) in section" :key="indexPhoto"
-      >
-        <div><img class="m-0 mx-auto m-2" :src="photo.thumbnail_url" alt=""></div>
-        <div class="m-1"><a href="javascript:void(0)">Title: {{ photo.title }}</a></div>
-        <div class="m-1"><p>Album: {{photo.album.title}}</p></div>
-        <div v-if="user !== null"><a href="javascript:void(0)" class="bg-red-400 text-white rounded-sm w-18" @click="handleDeletePhoto(photo.id)">Delete</a></div>
-      </div>
+
+    <div class="flex flex-col">
+
     </div>
   </div>
 </template>
