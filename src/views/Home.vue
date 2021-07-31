@@ -21,8 +21,9 @@
           </select>
         </div>
         <div class="ml-2 bg-white text-black rounded-lg p-1"
-             v-show="movePhotoPayload.albumId !== '0'"><a @click="handleMovePhoto" href="javascript:void(0)">Pindahkan
-          Foto</a></div>
+             v-show="movePhotoPayload.albumId !== '0'"><a @click="handleProcessMovePhoto"
+                                                          href="javascript:void(0)">Pindahkan
+          Foto Sekarang</a></div>
       </div>
     </div>
     <div class="mt-5">
@@ -101,8 +102,25 @@ export default {
       })
       this.movePhotoPayload.selectedPhoto = newObj
     },
-    handleProcessMovePhoto() {
-      const request
+    async handleProcessMovePhoto() {
+      try {
+        const request = await fetch(`http://localhost:8000/api/picture/move/${this.movePhotoPayload.albumId}`, {
+          method: "PUT",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": this.user.auth.token,
+          },
+          body: JSON.stringify({picture_ids: this.movePhotoPayload.selectedPhoto})
+        })
+
+        await request.json()
+
+        alert("Proses pemindahan foto ke album baru berhasil")
+        window.location.pathname = "/"
+      } catch (e) {
+        alert("Proses pemindahan foto ke album baru gagal")
+      }
     },
     isHaveToken() {
       const userToken = localStorage.getItem("tokenUser")

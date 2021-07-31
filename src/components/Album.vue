@@ -7,6 +7,7 @@
           class="w-full h-72 md:w-72 bg-white rounded-lg text-black mr-5 mt-5 flex flex-col"  v-for="(album, indexAlbum) in section" :key="indexAlbum"
         >
           <div class="m-1"><a href="javascript:void(0)" @click="setAlbumDetail(album)">{{ album.title }}</a></div>
+          <div class="mt-auto" v-if="user !== null"><a href="javascript:void(0)" class="bg-red-400 text-white rounded-sm w-18" @click="handleDeleteAlbum(album.id)">Delete</a></div>
         </div>
       </div>
       <div class="flex flex-col md:flex-row" v-show="album.albumDataSearch._value.length > 0"
@@ -14,7 +15,8 @@
         <div
           class="w-full h-72 md:w-72 bg-white rounded-lg text-black mr-5 mt-5 flex flex-col"  v-for="(album, indexAlbum) in section" :key="indexAlbum"
         >
-          <div class="m-1"><a href="">{{ album.title }}</a></div>
+          <div class="m-1"><a href="javascript:void(0)" @click="setAlbumDetail(album)">{{ album.title }}</a></div>
+          <div class="mt-auto" v-if="user !== null"><a href="javascript:void(0)" class="bg-red-400 text-white rounded-sm w-18" @click="handleDeleteAlbum(album.id)">Delete</a></div>
         </div>
       </div>
     </div>
@@ -24,6 +26,7 @@
       <div class="flex flex-row">
         <div class="bg-white text-black rounded-lg p-1"><a href="javascript:void(0)" @click = "clearAlbumDetail">Kembali</a></div>
       </div>
+      <div class="flex flex-col md:flex-row" v-show="albumDetail.photos.length === 0">Album kosong, foto tidak ada</div>
       <div class="flex flex-col md:flex-row"
            v-for="(section, indexSection) in albumDetail.photos" :key="indexSection">
         <div
@@ -51,6 +54,8 @@ export default {
   },
   data() {
     return {
+      user: null,
+      haveToken: false,
       albumDetail: null
     }
   },
@@ -74,6 +79,38 @@ export default {
     clearAlbumDetail() {
       this.$emit('isDetail', false)
       this.albumDetail = null
+    },
+    isHaveToken() {
+      const userToken = localStorage.getItem("tokenUser")
+      console.log(userToken)
+      return !!userToken;
+    },
+    async handleDeleteAlbum(id) {
+      try {
+        const request = await fetch(`http://localhost:8000/api/album/${id}`, {
+          method: "DELETE",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": this.user.auth.token
+          },
+        })
+
+        await request.json()
+        alert("Delete album berhasil")
+
+        window.location.pathname = "/album"
+      } catch (e) {
+        alert("Delete album gagal")
+      }
+    }
+  },
+  mounted() {
+    if (this.isHaveToken()) {
+      this.user = JSON.parse(localStorage.getItem("tokenUser"))
+      this.haveToken = true
+    } else {
+      this.haveToken = false
     }
   }
 };

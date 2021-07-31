@@ -15,7 +15,8 @@
     <div class="m-0 ml-auto px-10 lg:px-14 hidden md:flex" v-show="haveToken">
       <p class="border-r-2 pr-2">{{ user.user.name }}</p>
       <a href="" class="mx-2">Upload Foto</a>
-      <a href="" class="mx-2">Bikin Album</a>
+      <a href="/album/create" class="mx-2">Bikin Album</a>
+      <a href="javascript:void(0)" class="mx-2" @click="logout">Logout</a>
     </div>
   </div>
 </template>
@@ -42,7 +43,7 @@ export default {
     logout() {
       localStorage.removeItem("tokenUser")
 
-      this.$router.push("/")
+      window.location.pathname = '/'
     }
   },
   mounted() {
