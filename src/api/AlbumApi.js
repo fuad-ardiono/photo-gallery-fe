@@ -3,7 +3,7 @@
 import {onMounted, ref, watch} from "vue";
 import {chunk, debounce} from "lodash";
 
-export function fetchAlbum(lastPage, search = "") {
+export function fetchAlbum(lastPage, search = "", maxPage= false, chunked = true) {
   const albumData = ref([])
   const albumDataSearch = ref([])
 
@@ -15,7 +15,7 @@ export function fetchAlbum(lastPage, search = "") {
       }
       albumDataSearch.value = []
 
-      const response = await fetch(`http://localhost:8000/api/album?perPage=10&page=${lastPage.value}`, {
+      const response = await fetch(`http://localhost:8000/api/album?perPage=${maxPage === true ? 999999 : 10}&page=${lastPage.value}`, {
         method: "GET",
         mode: "cors",
         headers: {
@@ -29,7 +29,13 @@ export function fetchAlbum(lastPage, search = "") {
         })
       }
 
-      chunkData(await response.json())
+      if (chunked) {
+        chunkData(await response.json())
+      } else {
+        const resp = await response.json()
+
+        albumData.value = resp.data
+      }
     } else {
       const response = await fetch(`http://localhost:8000/api/album?perPage=999999&page=1&title=${search.value}`, {
         method: "GET",

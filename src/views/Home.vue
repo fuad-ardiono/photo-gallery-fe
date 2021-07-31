@@ -2,10 +2,27 @@
   <div class="home flex flex-col">
     <h1 class="text-4xl font-semibold">Foto</h1>
     <div class="mt-5 flex">
-      <p v-show="!movePhotoMode"><input type="text" @input="handleSearch($event, this)" class="border-2 border-gray-400 text-black rounded-xl" placeholder="Cari/filter berdasarkan nama"  style="text-indent: 10px"></p>
+      <p v-show="!movePhotoMode"><input type="text" @input="handleSearch($event, this)"
+                                        class="border-2 border-gray-400 text-black rounded-xl"
+                                        placeholder="Cari/filter berdasarkan nama"
+                                        style="text-indent: 10px"></p>
       <div class="flex" v-if="haveToken">
-        <div v-show="!movePhotoMode" class="ml-2 bg-white text-black rounded-lg p-1"><a @click="handleMovePhoto" href="javascript:void(0)">Pindahkan foto ke album lain</a></div>
-        <div v-show="movePhotoMode" class="ml-2 bg-red-500 text-white rounded-lg p-1"><a @click="handleCancelMovePhoto" href="javascript:void(0)">Batalkan pindah foto</a></div>
+        <div v-show="!movePhotoMode" class="ml-2 bg-white text-black rounded-lg p-1"><a
+          @click="handleMovePhoto" href="javascript:void(0)">Pindahkan foto ke album lain</a></div>
+        <div v-show="movePhotoMode" class="ml-2 bg-red-500 text-white rounded-lg p-1"><a
+          @click="handleCancelMovePhoto" href="javascript:void(0)">Batalkan pindah foto</a></div>
+        <div v-show="movePhotoMode && movePhotoPayload.selectedPhoto.length > 0"
+             class="ml-2 bg-white text-black rounded-lg p-1 px-5">Pilih album
+          <select name="" v-model="movePhotoPayload.albumId" id="">
+            <option value="0">---Pilih album---</option>
+            <option :value="album.id" v-for="(album, indexAlbum) in album.albumData._value"
+                    :key="indexAlbum">{{ album.title }}
+            </option>
+          </select>
+        </div>
+        <div class="ml-2 bg-white text-black rounded-lg p-1"
+             v-show="movePhotoPayload.albumId !== '0'"><a @click="handleMovePhoto" href="javascript:void(0)">Pindahkan
+          Foto</a></div>
       </div>
     </div>
     <div class="mt-5">
@@ -26,6 +43,8 @@
 <script>
 import Photo from '@/components/Photo.vue';
 import {debounce} from "lodash/function";
+import {fetchAlbum} from "../api/AlbumApi";
+import {toRefs} from "vue";
 
 export default {
   name: 'Home',
@@ -37,12 +56,23 @@ export default {
       haveToken: false,
       user: null,
       movePhotoPayload: {
-        selectedPhoto: []
+        selectedPhoto: [],
+        albumId: "0"
       }
     }
   },
   components: {
     Photo,
+  },
+  setup() {
+    const searchValue = toRefs({search: ""})
+    const album = fetchAlbum(1, searchValue.search, true, false)
+
+    console.log('fetched album', album)
+
+    return {
+      album
+    }
   },
   methods: {
     showMore() {
@@ -57,6 +87,10 @@ export default {
     },
     handleCancelMovePhoto() {
       this.movePhotoMode = false
+      this.movePhotoPayload = {
+        selectedPhoto: [],
+        albumId: "0"
+      }
     },
     handleSelectPhoto(value) {
       this.movePhotoPayload.selectedPhoto.push(value)
@@ -67,6 +101,9 @@ export default {
       })
       this.movePhotoPayload.selectedPhoto = newObj
     },
+    handleProcessMovePhoto() {
+      const request
+    },
     isHaveToken() {
       const userToken = localStorage.getItem("tokenUser")
       console.log(userToken)
@@ -74,7 +111,7 @@ export default {
     },
   },
   mounted() {
-    if(this.isHaveToken()) {
+    if (this.isHaveToken()) {
       this.user = JSON.parse(localStorage.getItem("tokenUser"))
       this.haveToken = true
     } else {

@@ -6,7 +6,8 @@
         class="w-full h-72 md:w-72 bg-white rounded-lg text-black mr-5 mt-5 flex flex-col"  v-for="(photo, indexPhoto) in section" :key="indexPhoto"
       >
         <div><img class="m-0 mx-auto m-2" :src="photo.thumbnail_url" alt=""></div>
-        <div class="m-1"><a href="javascript:void(0)">{{ photo.title }}</a></div>
+        <div class="m-1"><a href="javascript:void(0)">Title: {{ photo.title }}</a></div>
+        <div class="m-1"><p>Album: {{photo.album.title}}</p></div>
         <div v-if="movePhotoMode"><span>Move photo </span><input type="checkbox" @click="handleSelectPhoto(photo.id, $event)"></div>
       </div>
     </div>
