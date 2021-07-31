@@ -5,20 +5,17 @@
     </div>
     <div class="menu px-6 hidden md:flex text-left">
       <ul class="list inline-flex md:space-x-5 mt-1 sm:">
-        <li class="w-64 lg:w-96">
-          <input
-            type="text"
-            class="border-2 border-gray-400 rounded-xl w-full"
-            placeholder="Cari foto"
-            style="text-indent: 10px"
-          >
-        </li>
         <li><a href="/"><p>Foto</p></a></li>
         <li><a href="/album">Album</a></li>
       </ul>
     </div>
-    <div class="m-0 ml-auto px-10 lg:px-14 hidden md:flex">
-      <a href="">Masuk</a>
+    <div class="m-0 ml-auto px-10 lg:px-14 hidden md:flex" v-show="!haveToken">
+      <a href="/login">Masuk</a>
+    </div>
+    <div class="m-0 ml-auto px-10 lg:px-14 hidden md:flex" v-show="haveToken">
+      <p class="border-r-2 pr-2">{{ user.user.name }}</p>
+      <a href="" class="mx-2">Upload Foto</a>
+      <a href="" class="mx-2">Bikin Album</a>
     </div>
   </div>
 </template>
@@ -26,6 +23,36 @@
 <script>
 export default {
   name: 'Header',
+  data() {
+    return {
+      haveToken: false,
+      user: {
+        user: {
+          name: ""
+        }
+      }
+    }
+  },
+  methods: {
+    isHaveToken() {
+      const userToken = localStorage.getItem("tokenUser")
+      console.log(userToken)
+      return userToken !== null;
+    },
+    logout() {
+      localStorage.removeItem("tokenUser")
+
+      this.$router.push("/")
+    }
+  },
+  mounted() {
+    if(this.isHaveToken()) {
+      this.user = JSON.parse(localStorage.getItem("tokenUser"))
+      this.haveToken = true
+    } else {
+      this.haveToken = false
+    }
+  }
 };
 </script>
 

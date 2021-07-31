@@ -1,27 +1,52 @@
 /* eslint-disable */
 
 import {onMounted, ref, watch} from "vue";
-import { chunk } from "lodash";
+import {chunk, debounce} from "lodash";
 
-export function fetchAlbum(lastPage) {
+export function fetchAlbum(lastPage, search = "") {
   const albumData = ref([])
+  const albumDataSearch = ref([])
 
   const callApi = async () => {
-    const response = await fetch(`http://localhost:8000/api/album?perPage=10&page=${lastPage.value}`, {
-      method: "GET",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
-    })
+    if (search.value === "") {
+      console.log("trigger")
+      if (lastPage.value === 1 && albumDataSearch.value.length > 0) {
+        albumData.value = []
+      }
+      albumDataSearch.value = []
 
-    chunkData(await response.json())
-  }
+      const response = await fetch(`http://localhost:8000/api/album?perPage=10&page=${lastPage.value}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      })
 
-  const chunkData = (data) => {
-    chunk(data.data, 5).map((obj) => {
-      albumData.value.push(obj)
-    })
+      const chunkData = (data) => {
+        chunk(data.data, 5).map((obj) => {
+          albumData.value.push(obj)
+        })
+      }
+
+      chunkData(await response.json())
+    } else {
+      const response = await fetch(`http://localhost:8000/api/album?perPage=999999&page=1&title=${search.value}`, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      })
+
+      const chunkData = (data) => {
+        chunk(data.data, 5).map((obj) => {
+          albumDataSearch.value.push(obj)
+        })
+      }
+
+      chunkData(await response.json())
+    }
   }
 
   onMounted(async () => {
@@ -29,8 +54,10 @@ export function fetchAlbum(lastPage) {
   })
 
   watch(lastPage, callApi)
+  watch(search, callApi)
 
   return {
-    albumData
+    albumData,
+    albumDataSearch
   }
 }
