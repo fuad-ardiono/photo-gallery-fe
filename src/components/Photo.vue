@@ -11,7 +11,7 @@
             <a href="javascript:void(0)" v-if="!isEditPhoto(photo.id)">Title: {{ photo.title }}</a>
             <input v-if="isEditPhoto(photo.id)" style="text-indent: 10px" class="border-2 border-gray-400 text-black rounded-xl" type="text" :value="photo.title" @input="handleRenameInputText($event, photo.id)">
             <div class="flex">
-              <a class="ml-5" href="javascript:void(0)" @click="handleEditPhoto(photo)"><i class="fas fa-pencil-alt"></i></a>
+              <a class="ml-5" v-show="user != null" href="javascript:void(0)" @click="handleEditPhoto(photo)"><i class="fas fa-pencil-alt"></i></a>
               <div v-if="isEditPhoto(photo.id)"><a @click="handleRenamePhoto(photo)" class="bg-blue-400 text-white rounded-sm w-18 ml-2" href="javascript:void(0)">Simpan</a></div>
             </div>
           </div>
