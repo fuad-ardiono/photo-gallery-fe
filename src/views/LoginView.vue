@@ -10,7 +10,7 @@
                     placeholder="Masukkan email" type="text"></div>
         <div class="m-2">Password</div>
         <div><input v-model="payload.password" class="border-2 border-gray-400 text-black rounded-xl" style="text-indent: 10px"
-                    placeholder="Masukkan password" type="password"></div>
+                    placeholder="Masukkan password" type="password" v-on:keyup.enter="handleLogin"></div>
         <a href="javascript:void(0)" @click="handleLogin" class="m-2 text-white bg-blue-900 text-center">Login</a>
       </div>
     </div>
