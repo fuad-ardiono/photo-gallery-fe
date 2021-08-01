@@ -16,13 +16,18 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'Login',
+    name: 'Login View',
     component: () => import(/* webpackChunkName: "loginView" */ '../views/LoginView.vue'),
   },
   {
     path: '/album/create',
     name: 'Create Album View',
     component: () => import(/* webpackChunkName: "albumCreateView" */ '../views/CreateAlbumView')
+  },
+  {
+    path: '/photo/upload',
+    name: 'Upload Photo View',
+    component: () => import(/* webpackChunkName: "upload" */ '../views/CreatePhotoView')
   }
 ];
 
